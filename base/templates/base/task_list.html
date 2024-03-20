@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block content %}
+
+<style>
+    /* Add or modify your CSS styles here */
+    .dropzone {
+        min-height: 100px;
+        border: 2px dashed #ccc;
+        margin-bottom: 20px;
+    }
+    .card {
+        cursor: move;
+    }
+    /* Custom styles for headings */
+    .todo-heading {
+        color: red;
+    }
+
+    .started-heading {
+        color: yellow;
+    }
+
+    .completed-heading {
+        color: green;
+    }
+
+    .archived-heading {
+        color: blue;
+    }
+</style>
+
+<div class="row mt-5">
+    <div class="col-md-3">
+        <h2 class="text-center mb-3 todo-heading"><i class="fa fa-list" aria-hidden="true"></i> To Do</h2>
+        <hr>
+        <div id="todo" class="dropzone" ondrop="drop(event, 'todo')" ondragover="allowDrop(event)">
+            {% if todo_count == 0 %}
+                
+            {% else %}
+                {% for x in tasks %}
+                    {% if x.status == "todo" %}
+                        <div id="task-{{ x.id }}" class="card mb-3" draggable="true" ondragstart="drag(event)">
+                            <div class="card-body">
+                                <h4 class="card-title">{{ x.title }}</h4>
+                                <p class="card-text">{{ x.description|safe|truncatechars:50 }}</p>
+                                <p class="card-text">{{ x.due|date:"F j, Y, P" }}</p>
+                                <div class="text-end pt-3">
+                                    <i class="fa fa-eye fa-lg text-primary icon" onclick="window.location.href='{% url 'task' x.id %}'" aria-hidden="true"></i>
+                                    <i class="fa fa-pencil fa-lg text-secondary icon" onclick="window.location.href='{% url 'task-update' x.id %}'" aria-hidden="true"></i>
+                                    <i class="fa fa-trash fa-lg text-danger icon" onclick="window.location.href='{% url 'task-delete' x.id %}'" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <h2 class="text-center mb-3 started-heading"><i class="fa fa-tasks" aria-hidden="true"></i> Started</h2>
+        <hr>
+        <div id="started" class="dropzone" ondrop="drop(event, 'started')" ondragover="allowDrop(event)">
+            {% if started_count == 0 %}
+                
+            {% else %}
+                {% for x in tasks %}
+                    {% if x.status == "started" %}
+                        <div id="task-{{ x.id }}" class="card mb-3" draggable="true" ondragstart="drag(event)">
+                            <div class="card-body">
+                                <h4 class="card-title">{{ x.title }}</h4>
+                                <p class="card-text">{{ x.description|safe|truncatechars:50 }}</p>
+                                <p class="card-text">{{ x.due|date:"F j, Y, P" }}</p>
+                                <div class="text-end pt-3">
+                                    <i class="fa fa-eye fa-lg text-primary icon" onclick="window.location.href='{% url 'task' x.id %}'" aria-hidden="true"></i>
+                                    <i class="fa fa-pencil fa-lg text-secondary icon" onclick="window.location.href='{% url 'task-update' x.id %}'" aria-hidden="true"></i>
+                                    <i class="fa fa-trash fa-lg text-danger icon" onclick="window.location.href='{% url 'task-delete' x.id %}'" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <h2 class="text-center mb-3 completed-heading"><i class="fa fa-check" aria-hidden="true"></i> Completed</h2>
+        <hr>
+        <div id="completed" class="dropzone" ondrop="drop(event, 'completed')" ondragover="allowDrop(event)">
+            {% if completed_count == 0 %}
+                
+            {% else %}
+                {% for x in tasks %}
+                    {% if x.status == "complete" %}
+                        <div id="task-{{ x.id }}" class="card mb-3" draggable="true" ondragstart="drag(event)">
+                            <div class="card-body">
+                                <h4 class="card-title">{{ x.title }}</h4>
+                                <p class="card-text">{{ x.description|safe|truncatechars:50 }}</p>
+                                <p class="card-text">{{ x.due|date:"F j, Y, P" }}</p>
+                                <div class="text-end pt-3">
+                                    <i class="fa fa-eye fa-lg text-primary icon" onclick="window.location.href='{% url 'task' x.id %}'" aria-hidden="true"></i>
+                                    <i class="fa fa-pencil fa-lg text-secondary icon" onclick="window.location.href='{% url 'task-update' x.id %}'" aria-hidden="true"></i>
+                                    <i class="fa fa-trash fa-lg text-danger icon" onclick="window.location.href='{% url 'task-delete' x.id %}'" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <h2 class="text-center mb-3 archived-heading"><i class="fa fa-archive" aria-hidden="true"></i> Archived</h2>
+        <hr>
+        <div id="archived" class="dropzone" ondrop="drop(event, 'archived')" ondragover="allowDrop(event)">
+            {% if archived_count == 0 %}
+                
+            {% else %}
+                {% for x in tasks %}
+                    {% if x.status == "archived" %}
+                        <div id="task-{{ x.id }}" class="card mb-3" draggable="true" ondragstart="drag(event)">
+                            <div class="card-body">
+                                <h4 class="card-title">{{ x.title }}</h4>
+                                <p class="card-text">{{ x.description|safe|truncatechars:50 }}</p>
+                                <p class="card-text">{{ x.due|date:"F j, Y, P" }}</p>
+                                <div class="text-end pt-3">
+                                    <i class="fa fa-eye fa-lg text-primary icon" onclick="window.location.href='{% url 'task' x.id %}'" aria-hidden="true"></i>
+                                    <i class="fa fa-pencil fa-lg text-secondary icon" onclick="window.location.href='{% url 'task-update' x.id %}'" aria-hidden="true"></i>
+                                    <i class="fa fa-trash fa-lg text-danger icon" onclick="window.location.href='{% url 'task-delete' x.id %}'" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    function allowDrop(event) {
+        event.preventDefault();
+    }
+
+    function drag(event) {
+        event.dataTransfer.setData("text", event.target.id);
+    }
+
+    function drop(event, status) {
+        event.preventDefault();
+        var data = event.dataTransfer.getData("text");
+        var element = document.getElementById(data);
+        var parent = element.parentNode;
+        var target = event.target.closest(".dropzone");
+
+        // Move the task to the new status
+        target.appendChild(element);
+
+        // Update the status of the task in the backend
+        var taskId = data.split("-")[1]; // Extract the task ID from the element ID
+        // Send an AJAX request to update the task status
+        // You need to implement this on your backend
+        // Example:
+        // $.post("/update_task_status/", {task_id: taskId, new_status: status});
+    }
+</script>
+
+{% endblock %}

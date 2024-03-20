@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load static %}
+
+<script src="{% static 'ckeditor/ckeditor.js' %}"></script>
+
+{% block title %}
+Update
+{% endblock %}
+
+{% block content %}
+
+<style>
+    /* Styles for notification */
+    #notification {
+        display: none;
+        position: fixed;
+        top: 20px; /* Adjust as needed */
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #f0f0f0;
+        padding: 10px 20px;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        z-index: 9999;
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    /* Styles for form */
+    #updateForm {
+        margin-top: 50px; /* Adjust as needed */
+    }
+
+    /* Styles for submit button */
+    #updateBtn {
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+    }
+</style>
+
+<h1 class="h2">Update Task</h1>
+
+<!-- Form for updating task -->
+<form id="updateForm" action="" method="post">
+    {% csrf_token %}
+    {{ form.media }}
+    {{ form.as_p }}
+    <input type="submit" id="updateBtn" value="Update Task" onclick="showNotification()">
+</form>
+
+<!-- Notification popup -->
+<div id="notification">
+    Task updated successfully!
+</div>
+
+<!-- Initialize CKEditor -->
+<script>
+    CKEDITOR.replace('id_description');
+
+    function showNotification() {
+        document.getElementById('notification').style.display = 'block';
+        setTimeout(function () {
+            document.getElementById('notification').style.display = 'none';
+        }, 5000);
+    }
+</script>
+
+{% endblock %}
